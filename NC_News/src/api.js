@@ -39,5 +39,28 @@ function fetchArticleById(id)
   });
 }
 
+function fetchCommentsByArticleId(id)
+{
+  return fetch(`https://databases-ty2f.onrender.com/api/articles/${id}/comments`)
+  .then((res) =>
+  {
+    if (!res.ok)
+    {
+      throw new Error("Network response not ok")
+    }
+    return res.json();
+  })
+  .then((data) =>
+  {
+    console.log("comments data", data);
+    return data;
+  })
+  .catch((err) =>
+  {
+    console.error("Error fetching data", err);
+    throw err;
+  });
+}
 
-export {fetchAllArticles, fetchArticleById};
+
+export {fetchAllArticles, fetchArticleById, fetchCommentsByArticleId}

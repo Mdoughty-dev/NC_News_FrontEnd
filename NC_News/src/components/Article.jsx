@@ -22,7 +22,7 @@ export default function Article() {
       <img src={article.article_img_url} />
       <p>{article.body}</p>
       <p><strong>Written by :</strong>{article.author}</p>
-      <Comments/>
+      <Comments article_id={article_id}/>
     </div>
   );
 }

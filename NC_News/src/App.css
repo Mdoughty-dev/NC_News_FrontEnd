@@ -5,13 +5,13 @@
   align-items: center;
   padding: 16px 32px;
   font-size: 24px;
-  color: #ffcc70;
+  color: #fafafa;
   border-bottom: 4px solid #e2b111;
-  background-color: rgb(60, 26, 139);
+  background-color: rgb(0, 0, 0);
 }
 
 #nav-bar a {
-  color: #ffcc70;
+  color: #ffffff;
   text-decoration: none; 
 }
 
@@ -122,8 +122,8 @@ body {
 
   padding: 2rem;
 
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  color: white; 
+  background: solid black;
+  color: rgb(0, 0, 0); 
 }
 
 
