@@ -17,12 +17,13 @@ export default function Article() {
   if (!article) return <p>Loading...</p>;
 
   return (
-    <div>
+    <div className="results-grid">
       <h1>{article.title}</h1>
       <img src={article.article_img_url} />
       <p>{article.body}</p>
       <p><strong>Written by :</strong>{article.author}</p>
-      <Comments article_id={article_id}/>
+      <div className="result-card">
+      <Comments article_id={article_id}/></div>
     </div>
   );
 }

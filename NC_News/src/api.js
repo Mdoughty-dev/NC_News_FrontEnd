@@ -78,5 +78,22 @@ function patchCommentVotes(comment_id, inc_votes) {
     .then((data) => data.comment);
 }
 
+function fetchTopics() {
+  return fetch("https://databases-ty2f.onrender.com/api/topics")
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return res.json();
+    })
+    .then((data) => {
+      console.log("API response:", data);
+      return data.topics;   
+    })
+    .catch((err) => {
+      console.error("Error fetching data:", err);
+      throw err; 
+    });
+}
 
-export {fetchAllArticles, fetchArticleById, fetchCommentsByArticleId, patchCommentVotes}
+export {fetchAllArticles, fetchArticleById, fetchCommentsByArticleId, patchCommentVotes, fetchTopics}
