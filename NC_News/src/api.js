@@ -111,4 +111,20 @@ function fetchTopics() {
     .then((data) => data.article);
 }
 
-export {fetchAllArticles, fetchArticleById, fetchCommentsByArticleId, patchCommentVotes, fetchTopics, patchArticleVotes}
+function postCommentByArticleId(article_id, newComment) {
+  return fetch(
+    `https://databases-ty2f.onrender.com/api/articles/${article_id}/comments`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newComment), // { username, body }
+    }
+  )
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to post comment");
+      return res.json();
+    })
+    .then((data) => data.comment);
+}
+
+export {fetchAllArticles, fetchArticleById, fetchCommentsByArticleId, patchCommentVotes, fetchTopics, postCommentByArticleId, patchArticleVotes}
