@@ -9,7 +9,7 @@ export default function Articles({articles, setArticles, articleId, setArticleId
       setArticles(data);
     });
   }, []);
-  if (!articles) return <p>Loading...</p>;
+  if (!articles) return <p>Loading Articles Please wait as this may take up to 50 seconds ...</p>;
 
   return (
     <div className="results-grid">
