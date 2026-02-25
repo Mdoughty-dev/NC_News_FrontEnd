@@ -9,7 +9,7 @@ export default function Articles({articles, setArticles, articleId, setArticleId
       setArticles(data);
     });
   }, []);
-  
+  if (!articles) return <p>Loading...</p>;
 
   return (
     <div className="results-grid">

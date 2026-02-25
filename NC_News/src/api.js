@@ -62,5 +62,21 @@ function fetchCommentsByArticleId(id)
   });
 }
 
+function patchCommentVotes(comment_id, inc_votes) {
+  return fetch(
+    `https://databases-ty2f.onrender.com/api/comments/${comment_id}`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ inc_votes }),
+    }
+  )
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to patch comment votes");
+      return res.json();
+    })
+    .then((data) => data.comment);
+}
 
-export {fetchAllArticles, fetchArticleById, fetchCommentsByArticleId}
+
+export {fetchAllArticles, fetchArticleById, fetchCommentsByArticleId, patchCommentVotes}
