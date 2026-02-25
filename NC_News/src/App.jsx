@@ -20,7 +20,7 @@ export default function App() {
   <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/articles" element={<Articles articles={articles}  setArticles={setArticles} articleId={articleId} setArticleId={setArticleId}/>} />
-       <Route path="/article/:article_id" element={<Article />} />
+       <Route path="/article/:article_id" element={<Article  setArticles={setArticles}/>} />
        <Route path="/topics" element={<Topics />} />
       </Routes>
   </>
