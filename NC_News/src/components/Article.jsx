@@ -4,7 +4,7 @@ import useLoadingError from "../hooks/useLoadingError";
 import { fetchArticleById, patchArticleVotes } from "../api";
 import Comments from "./Comments";
 
-export default function Article() {
+export default function Article({currentUser}) {
   const { article_id } = useParams();
 
 
@@ -55,7 +55,7 @@ export default function Article() {
       <button onClick={() => handleVote(-1)}>👎</button>
 
       <div className="result-card">
-        <Comments article_id={article_id} />
+        <Comments article_id={article_id} currentUser={currentUser}/>
       </div>
     </div>
   );

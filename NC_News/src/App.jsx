@@ -11,16 +11,15 @@ import { Routes, Route } from "react-router-dom";
 export default function App() {
   const [articles, setArticles] = useState([]);
   const [articleId, setArticleId] = useState();
+  const [currentUser, setCurrentUser] = useState("grumpy19")
  
-  
-  
   return(
   <>
   < Header/>
   <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home  currentUser={currentUser}/>} />
         <Route path="/articles" element={<Articles articles={articles}  setArticles={setArticles} articleId={articleId} setArticleId={setArticleId}/>} />
-       <Route path="/article/:article_id" element={<Article  setArticles={setArticles}/>} />
+       <Route path="/article/:article_id" element={<Article  setArticles={setArticles} currentUser={currentUser}/>} />
        <Route path="/topics" element={<Topics />} />
       </Routes>
   </>

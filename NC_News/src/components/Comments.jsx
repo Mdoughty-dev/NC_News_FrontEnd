@@ -6,7 +6,7 @@ import {
   deleteCommentById,
 } from "../api";
 
-export default function Comments({ article_id }) {
+export default function Comments({ article_id , currentUser}) {
   const [showComments, setShowComments] = useState(false);
 
   const [comments, setComments] = useState([]);
@@ -22,7 +22,7 @@ export default function Comments({ article_id }) {
   const [deletingIds, setDeletingIds] = useState(() => new Set());
 
 
-  const currentUser = "grumpy19";
+ 
 
  
   useEffect(() => {
@@ -93,22 +93,22 @@ export default function Comments({ article_id }) {
   function handleDelete(comment_id) {
     setErr(null);
 
-    // ✅ prevent duplicate delete requests
+  
     if (deletingIds.has(comment_id)) return;
 
-    // store comment for rollback
+  
     const deletedComment = comments.find((c) => c.comment_id === comment_id);
     if (!deletedComment) return;
 
-    // mark as deleting (use a new Set so React sees the update)
+  
     setDeletingIds((prev) => new Set(prev).add(comment_id));
 
-    // ✅ optimistic remove from UI
+  
     setComments((curr) => curr.filter((c) => c.comment_id !== comment_id));
 
     deleteCommentById(comment_id)
       .catch((e) => {
-        // rollback on failure
+     
         setComments((curr) => [deletedComment, ...curr]);
         setErr(e);
       })
