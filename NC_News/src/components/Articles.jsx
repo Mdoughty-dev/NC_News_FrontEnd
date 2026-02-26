@@ -1,22 +1,13 @@
 import { useEffect, useState } from "react";
 import { fetchAllArticles } from "../api";
 import { Link } from "react-router-dom";
+import useLoadingError from "../hooks/useLoadingError";
 
-export default function Articles({ articles, setArticles }) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [err, setErr] = useState(null);
+export default function Articles() {
 
-  useEffect(() => {
-    setIsLoading(true);
-    setErr(null);
 
-    fetchAllArticles()
-      .then((data) => {
-        setArticles(data);
-      })
-      .catch((e) => setErr(e))
-      .finally(() => setIsLoading(false));
-  }, [setArticles]);
+ const { data: articles, isLoading, error: err } =
+    useLoadingError(fetchAllArticles);
 
   if (isLoading) return <p>Loading articles…</p>;
   if (err) return <p>Failed to load articles.</p>;
