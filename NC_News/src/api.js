@@ -134,4 +134,18 @@ function postCommentByArticleId(article_id, newComment) {
     return; // usually 204 No Content
   });
 }
-export {fetchAllArticles, fetchArticleById, fetchCommentsByArticleId, deleteCommentById , patchCommentVotes, fetchTopics, postCommentByArticleId, patchArticleVotes}
+function fetchArticlesByTopic(topic) {
+  return fetch(
+    `https://databases-ty2f.onrender.com/api/articles?topic=${topic}`
+  )
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Network response not ok");
+      }
+      return res.json();
+    })
+    .then((data) => {
+      return data.articles;
+    });
+}
+export {fetchAllArticles, fetchArticleById, fetchArticlesByTopic,fetchCommentsByArticleId, deleteCommentById , patchCommentVotes, fetchTopics, postCommentByArticleId, patchArticleVotes}

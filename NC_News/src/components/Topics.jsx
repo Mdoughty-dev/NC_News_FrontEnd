@@ -1,9 +1,8 @@
+import { Link } from "react-router-dom";
 import useLoadingError from "../hooks/useLoadingError";
 import { fetchTopics } from "../api";
 
 export default function Topics() {
-  
-
   const { data: topics, isLoading, error: err } =
     useLoadingError(fetchTopics);
 
@@ -17,7 +16,9 @@ export default function Topics() {
 
       {topics.map((topic) => (
         <div className="result-card" key={topic.slug}>
-          <h3>{topic.slug}</h3>
+          <Link to={`/topics/${topic.slug}`}>
+            <h3>{topic.slug}</h3>
+          </Link>
         </div>
       ))}
     </div>
