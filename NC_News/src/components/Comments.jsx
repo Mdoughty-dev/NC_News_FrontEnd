@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import {
   fetchCommentsByArticleId,
   patchCommentVotes,
-  postCommentByArticleId, // <-- you'll add this in api.js
+  postCommentByArticleId,
+  deleteCommentById,
 } from "../api";
 
 export default function Comments({ article_id }) {
@@ -13,11 +14,17 @@ export default function Comments({ article_id }) {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // add comment form state
+
   const [newCommentBody, setNewCommentBody] = useState("");
   const [isPosting, setIsPosting] = useState(false);
 
-  // Fetch only when showComments is true
+  
+  const [deletingIds, setDeletingIds] = useState(() => new Set());
+
+
+  const currentUser = "grumpy19";
+
+ 
   useEffect(() => {
     if (!showComments) return;
 
@@ -33,7 +40,7 @@ export default function Comments({ article_id }) {
   function handleVote(comment_id, inc_votes) {
     setErr(null);
 
-    // optimistic update
+  
     setComments((curr) =>
       curr.map((c) =>
         c.comment_id === comment_id ? { ...c, votes: c.votes + inc_votes } : c
@@ -47,10 +54,12 @@ export default function Comments({ article_id }) {
         );
       })
       .catch((e) => {
-        // revert
+       
         setComments((curr) =>
           curr.map((c) =>
-            c.comment_id === comment_id ? { ...c, votes: c.votes - inc_votes } : c
+            c.comment_id === comment_id
+              ? { ...c, votes: c.votes - inc_votes }
+              : c
           )
         );
         setErr(e);
@@ -71,10 +80,8 @@ export default function Comments({ article_id }) {
 
     setIsPosting(true);
 
- 
-    postCommentByArticleId(article_id, { username: "grumpy19", body })
+    postCommentByArticleId(article_id, { username: currentUser, body })
       .then((createdComment) => {
-        // put new comment at top
         setComments((curr) => [createdComment, ...curr]);
         setNewCommentBody("");
         setShowComments(true);
@@ -83,13 +90,48 @@ export default function Comments({ article_id }) {
       .finally(() => setIsPosting(false));
   }
 
+  function handleDelete(comment_id) {
+    setErr(null);
+
+    // ✅ prevent duplicate delete requests
+    if (deletingIds.has(comment_id)) return;
+
+    // store comment for rollback
+    const deletedComment = comments.find((c) => c.comment_id === comment_id);
+    if (!deletedComment) return;
+
+    // mark as deleting (use a new Set so React sees the update)
+    setDeletingIds((prev) => new Set(prev).add(comment_id));
+
+    // ✅ optimistic remove from UI
+    setComments((curr) => curr.filter((c) => c.comment_id !== comment_id));
+
+    deleteCommentById(comment_id)
+      .catch((e) => {
+        // rollback on failure
+        setComments((curr) => [deletedComment, ...curr]);
+        setErr(e);
+      })
+      .finally(() => {
+        setDeletingIds((prev) => {
+          const next = new Set(prev);
+          next.delete(comment_id);
+          return next;
+        });
+      });
+  }
+
   return (
     <div>
       <button onClick={handleToggleComments}>
         {showComments ? "Hide comments" : "Show comments"}
       </button>
 
-      {err && <p>Something went wrong.</p>}
+      {err && (
+        <p role="alert" aria-live="polite">
+          Something went wrong.
+        </p>
+      )}
 
       {showComments && (
         <>
@@ -113,20 +155,69 @@ export default function Comments({ article_id }) {
           ) : comments.length === 0 ? (
             <p>No comments yet.</p>
           ) : (
-            comments.map((c) => (
-              <div key={c.comment_id}>
-                <p>
-                  <strong>{c.author}</strong>
-                </p>
-                <p>{c.body}</p>
+            comments.map((c) => {
+              const canDelete = c.author === currentUser;
+              const isDeleting = deletingIds.has(c.comment_id);
 
-                <p>Votes: {c.votes}</p>
-                <button onClick={() => handleVote(c.comment_id, 1)}>👍</button>
-                <button onClick={() => handleVote(c.comment_id, -1)}>👎</button>
+              return (
+                <div
+                  key={c.comment_id}
+                  style={{
+                    border: "1px solid #ddd",
+                    padding: "12px",
+                    marginTop: "12px",
+                    borderRadius: "8px",
+                  }}
+                >
+                  <p>
+                    <strong>{c.author}</strong>
+                  </p>
+                  <p>{c.body}</p>
 
-                <hr />
-              </div>
-            ))
+                  <p>Votes: {c.votes}</p>
+
+                  {/* basic responsive-friendly action row */}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: "8px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <button
+                      onClick={() => handleVote(c.comment_id, 1)}
+                      disabled={isDeleting}
+                      aria-disabled={isDeleting}
+                    >
+                      👍
+                    </button>
+                    <button
+                      onClick={() => handleVote(c.comment_id, -1)}
+                      disabled={isDeleting}
+                      aria-disabled={isDeleting}
+                    >
+                      👎
+                    </button>
+
+                    {canDelete && (
+                      <button
+                        onClick={() => handleDelete(c.comment_id)}
+                        disabled={isDeleting}
+                        aria-disabled={isDeleting}
+                        aria-label={
+                          isDeleting ? "Deleting comment" : "Delete comment"
+                        }
+                      >
+                        {isDeleting ? "Deleting..." : "Delete"}
+                      </button>
+                    )}
+                  </div>
+
+                  <hr />
+                </div>
+              );
+            })
           )}
         </>
       )}

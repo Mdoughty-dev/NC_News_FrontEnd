@@ -126,5 +126,12 @@ function postCommentByArticleId(article_id, newComment) {
     })
     .then((data) => data.comment);
 }
-
-export {fetchAllArticles, fetchArticleById, fetchCommentsByArticleId, patchCommentVotes, fetchTopics, postCommentByArticleId, patchArticleVotes}
+ function deleteCommentById(comment_id) {
+  return fetch(`https://databases-ty2f.onrender.com/api/comments/${comment_id}`, {
+    method: "DELETE",
+  }).then((res) => {
+    if (!res.ok) throw new Error("Failed to delete comment");
+    return; // usually 204 No Content
+  });
+}
+export {fetchAllArticles, fetchArticleById, fetchCommentsByArticleId, deleteCommentById , patchCommentVotes, fetchTopics, postCommentByArticleId, patchArticleVotes}
