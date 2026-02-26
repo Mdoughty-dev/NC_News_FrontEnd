@@ -9,6 +9,7 @@ function useLoadingError(getFunction, opitons={})
     useEffect(() => {
     setIsLoading(true);
     setError(false);
+    setData(null);
     getFunction(...params)
       .then((data) => {
         setData(data);
