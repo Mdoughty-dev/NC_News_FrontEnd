@@ -36,6 +36,12 @@
   padding: 0 20px;
   align-items: stretch;
 }
+.sort-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 12px 0 20px;
+}
 
 .left-container {
   width: 200px;

@@ -1,19 +1,15 @@
- function fetchAllArticles() {
-  return fetch("https://databases-ty2f.onrender.com/api/articles")
+
+ function fetchAllArticles({ sort_by = "created_at", order = "desc" } = {}) {
+  const url = new URL("https://databases-ty2f.onrender.com/api/articles");
+  url.searchParams.set("sort_by", sort_by);
+  url.searchParams.set("order", order);
+
+  return fetch(url.toString())
     .then((res) => {
-      if (!res.ok) {
-        throw new Error("Network response was not ok");
-      }
+      if (!res.ok) throw new Error("Network response was not ok");
       return res.json();
     })
-    .then((data) => {
-      console.log("API response:", data);
-      return data.articles;   
-    })
-    .catch((err) => {
-      console.error("Error fetching data:", err);
-      throw err; 
-    });
+    .then((data) => data.articles);
 }
 
 function fetchArticleById(id)
