@@ -60,6 +60,7 @@ export default function Articles() {
 
                 <p><strong>Topic:</strong> {article.topic}</p>
                 <p><strong>Votes:</strong> {article.votes}</p>
+                <p><strong>Comments:</strong> {article.comment_count}</p>
                 <p><strong>Written by:</strong> {article.author}</p>
 
                 <Link to={`/article/${article.article_id}`}>
