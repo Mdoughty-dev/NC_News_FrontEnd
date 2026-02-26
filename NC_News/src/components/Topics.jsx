@@ -1,26 +1,11 @@
-import { useState, useEffect } from "react";
+import useLoadingError from "../hooks/useLoadingError";
 import { fetchTopics } from "../api";
 
 export default function Topics() {
-  const [topics, setTopics] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [err, setErr] = useState(null);
+  
 
-  useEffect(() => {
-    setIsLoading(true);
-    setErr(null);
-
-    fetchTopics()
-      .then((data) => {
-        setTopics(data);
-      })
-      .catch((error) => {
-        setErr(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+  const { data: topics, isLoading, error: err } =
+    useLoadingError(fetchTopics);
 
   if (isLoading) return <p>Loading topics...</p>;
   if (err) return <p>Something went wrong.</p>;
